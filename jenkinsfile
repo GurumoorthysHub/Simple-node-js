@@ -1,22 +1,28 @@
 pipeline {
     agent any
 
+    environment {
+        GIT_CREDENTIALS = credentials('github-token')
+    }
+
     stages {
         stage('Clone') {
             steps {
-                git 'https://github.com/GurumoorthysHub/simple-nodejs-app.git'
+                git credentialsId: 'github-token', url: 'https://github.com/GurumoorthysHub/simple-nodejs-app.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t simple-node-app .'
+                echo 'Building Docker image...'
+                // Add your Docker build command here
             }
         }
 
         stage('Run App') {
             steps {
-                sh 'docker run -d -p 8080:8080 simple-node-app'
+                echo 'Running the application...'
+                // Add your run logic here
             }
         }
     }
