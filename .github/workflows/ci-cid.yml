@@ -30,4 +30,4 @@ jobs:
       - name: Build Docker Image
         run: docker build -t simple-node-app .
 
-      # Optional: Push to DockerHub or deploy to a server
+
