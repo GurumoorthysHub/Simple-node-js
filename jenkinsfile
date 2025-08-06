@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') {
+            steps {
+                git 'https://github.com/GurumoorthysHub/simple-nodejs-app.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t simple-node-app .'
+            }
+        }
+
+        stage('Run App') {
+            steps {
+                sh 'docker run -d -p 8080:8080 simple-node-app'
+            }
+        }
+    }
+}
