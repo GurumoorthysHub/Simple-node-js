@@ -1,38 +1,44 @@
 pipeline {
     agent any
-
     environment {
-        GIT_CREDENTIALS = credentials('github-token')
+        DOCKER_IMAGE = 'guru615/node'
+        DOCKER_TAG = 'latest'
     }
-
     stages {
-        stage('Clone') {
+        stage('Checkout') {
             steps {
-                git credentialsId: 'github-token', url: 'https://github.com/GurumoorthysHub/simple-nodejs-app.git'
+                git 'https://github.com/GurumoorthysHub/Simple-node-js.git'
             }
         }
-
+        stage('Build & Test') {
+            steps {
+                sh 'npm install'
+                sh 'npm test'
+            }
+        }
         stage('Build Docker Image') {
             steps {
-                echo 'Building Docker image...'
-                sh 'docker build -t guru615/node .'
+                script {
+                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
+                }
             }
         }
-
-        stage('Push Docker Image') {
+        stage('Run Docker Container') {
             steps {
-                echo 'Pushing Docker image to Docker Hub...'
-                sh 'docker push guru615/node:latest'
+                script {
+                    docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").run('-d -p 3000:3000')
+                }
             }
         }
-
-        stage('Run App') {
-            steps {
-                echo 'Running the application in Docker container...'
-                sh 'docker stop simple-node-app || true'
-                sh 'docker rm simple-node-app || true'
-                sh 'docker run -d --name simple-node-app -p 8080:8080 guru615/node:latest'
-            }
+    }
+    post {
+        success {
+            echo 'Build, test, image build, and container run succeeded!'
+            // Add email or Slack notification steps here
+        }
+        failure {
+            echo 'Build failed.'
+            // Add notification for failures here
         }
     }
 }
