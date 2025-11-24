@@ -4,9 +4,9 @@
   "description": "Research about a person",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "start": "node app.js",
+  "test": "echo \"No test configured: skipping tests\""
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/GurumoorthysHub/-Automate-Code-Deployment-Using-CI-CD-Pipeline-GitHub-Actions-.git"
