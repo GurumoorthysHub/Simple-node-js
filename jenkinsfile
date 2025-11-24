@@ -15,14 +15,23 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                // Add your Docker build command here
+                sh 'docker build -t guru615/node .'
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                echo 'Pushing Docker image to Docker Hub...'
+                sh 'docker push guru615/node:latest'
             }
         }
 
         stage('Run App') {
             steps {
-                echo 'Running the application...'
-                // Add your run logic here
+                echo 'Running the application in Docker container...'
+                sh 'docker stop simple-node-app || true'
+                sh 'docker rm simple-node-app || true'
+                sh 'docker run -d --name simple-node-app -p 8080:8080 guru615/node:latest'
             }
         }
     }
